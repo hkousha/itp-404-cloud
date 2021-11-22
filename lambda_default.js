@@ -1,25 +1,26 @@
 var AWS = require('aws-sdk');
 var http = require('http');
-var dynamoClient = new AWS.DynamoDB.DocumentClient({region: "us-east-2"});
+var dynamoClient = new AWS.DynamoDB.DocumentClient();
 var table = "chat";
 
-const APIHost = "https://fz16csxi4e.execute-api.us-east-2.amazonaws.com/test/"
+const APIHost = process.env.APIGatewayEndpoint
 
-
+// This function is being called whenever there is a new message is recieaved.
+// It will get the list of all connectionIds from dynamoDB table chat and then
+// uses apiGateWay @connections to braodcast the message.
+// more info: https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-how-to-call-websocket-api-connections.html
 exports.handler = async (event) => {
+    // Get list of clients.
     const params = {
         TableName: table
     };
-
     var apig = new AWS.ApiGatewayManagementApi(
     	{
-    		region: "us-east-2"
+    		region: "us-east-2",
     		endpoint: APIHost
     	});
 
-
     var clients = {}
-
     try {
         clients = await dynamoClient.scan(params).promise();
     } catch(err){
@@ -29,6 +30,7 @@ exports.handler = async (event) => {
         }
     }
 
+    // forward the message to all clients one by one.
     for (let i=0; i< clients.Items.length; i++){
         let connectionId = clients.Items[i].client_id
 		try {
@@ -36,11 +38,11 @@ exports.handler = async (event) => {
 				ConnectionId: connectionId,
 				Data: JSON.stringify(event),
 			}).promise();
-			
+
 			console.log("request is done")
 		} catch(err) {
 			console.log("got error forwarding message: ", err)
-		}		
+		}
 
     }
 

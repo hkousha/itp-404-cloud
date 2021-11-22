@@ -1,24 +1,26 @@
 const AWS = require('aws-sdk');
-var docClient = new AWS.DynamoDB.DocumentClient({region: "us-east-2"});
+var dynamoClient = new AWS.DynamoDB.DocumentClient();
 var table = "chat";
 
+// This function will be called once a wss connection is established.
+// It will add the connection_id to a dynamoDB table "chat"
 exports.handler = async (event) => {
     const connectionId = event.requestContext.connectionId
     console.log("got event: ", event)
 
     const params = {
         Item: {
-            client_id: connectionId
+            connection_id: connectionId
         },
         TableName: table
     };
 
     try {
-        const data = await docClient.put(params).promise();
+        const data = await dynamoClient.put(params).promise();
          return {
             statusCode: 200
             };
-    } catch(err){   
+    } catch(err){
         return {
             statusCode: 500
             };
