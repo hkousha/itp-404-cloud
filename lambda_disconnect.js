@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
-var dynamoClient = new AWS.DynamoDB.DocumentClient();
-var table = "chat";
+const dynamoClient = new AWS.DynamoDB.DocumentClient();
+const table = "chat";
 
 // This function will be called once a wss connection is ended.
 // It will delete the connection_id from the dynamoDB table  "chat"

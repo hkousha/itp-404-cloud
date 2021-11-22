@@ -1,7 +1,6 @@
-var AWS = require("aws-sdk");
-var http = require("http");
-var dynamoClient = new AWS.DynamoDB.DocumentClient();
-var table = "chat";
+const AWS = require("aws-sdk");
+const dynamoClient = new AWS.DynamoDB.DocumentClient();
+const table = "chat";
 
 const APIHost = process.env.APIGatewayEndpoint;
 
@@ -14,12 +13,12 @@ exports.handler = async (event) => {
   const params = {
     TableName: table,
   };
-  var apig = new AWS.ApiGatewayManagementApi({
+  const apig = new AWS.ApiGatewayManagementApi({
     region: "us-east-2",
     endpoint: APIHost,
   });
 
-  var clients = {};
+  const clients = {};
   try {
     clients = await dynamoClient.scan(params).promise();
   } catch (err) {

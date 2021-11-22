@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
-var dynamoClient = new AWS.DynamoDB.DocumentClient();
-var table = "chat";
+const dynamoClient = new AWS.DynamoDB.DocumentClient();
+const table = "chat";
 
 // This function will be called once a wss connection is established.
 // It will add the connection_id to a dynamoDB table "chat"
