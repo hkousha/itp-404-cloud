@@ -6,8 +6,6 @@ const table = "chat";
 // It will delete the connection_id from the dynamoDB table  "chat"
 exports.handler = async (event) => {
   const connectionId = event.requestContext.connectionId;
-  console.log("got event: ", event);
-
   const params = {
     Key: {
       connection_id: connectionId,
@@ -15,15 +13,8 @@ exports.handler = async (event) => {
     TableName: table,
   };
 
-  try {
-    const data = await dynamoClient.delete(params).promise();
-    return {
-      statusCode: 200,
-    };
-  } catch (err) {
-    console.log("failed to delete with error: ", err);
-    return {
-      statusCode: 500,
-    };
-  }
+  await dynamoClient.delete(params).promise();
+  return {
+    statusCode: 200,
+  };
 };

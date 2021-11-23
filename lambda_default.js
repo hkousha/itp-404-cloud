@@ -18,33 +18,18 @@ exports.handler = async (event) => {
     endpoint: APIHost,
   });
 
-  const clients = {};
-  try {
-    clients = await dynamoClient.scan(params).promise();
-  } catch (err) {
-    console.log("got error: ", err);
-    return {
-      statusCode: 500,
-    };
-  }
+  const clients = await dynamoClient.scan(params).promise();
 
   // forward the message to all clients one by one.
   for (let i = 0; i < clients.Items.length; i++) {
     let connectionId = clients.Items[i].connection_id;
-    try {
-      await apig
-        .postToConnection({
-          ConnectionId: connectionId,
-          Data: JSON.stringify(event),
-        })
-        .promise();
-
-      console.log("request is done");
-    } catch (err) {
-      console.log("got error forwarding message: ", err);
-    }
+    await apig
+      .postToConnection({
+        ConnectionId: connectionId,
+        Data: JSON.stringify(event),
+      })
+      .promise();
   }
-
   return {
     statusCode: 200,
   };
