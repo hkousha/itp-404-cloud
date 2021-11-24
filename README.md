@@ -4,6 +4,12 @@ _You can create a free AWS account [here](https://aws.amazon.com/free/)_
 
 __important: Make sure you delete all the resources you create or you might get charged by AWS__
 
+This repo uses github submodule, to clone this repo you need to add `--recurse-submodules` to your github command.
+ex:
+```
+git clone --recurse-submodules https://github.com/hkousha/itp-404-cloud
+```
+
 It uses these AWS Services:
 
 - [S3](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html): to store the frontend code
@@ -51,7 +57,7 @@ We will be using APIGateway for handling Websocket connections. ApiGateway doesn
 		- our lambda functions will need to be able to talk to APIGateway and DynamoDb. To allow this we will need to create a new IAM role.
 		- Navigate to [AWS IAM Role](https://console.aws.amazon.com/iamv2/home?#/roles) and click create role
 		- Select Lambda
-		- In `Attach permissions policies` search and select `AmazonAPIGatewayInvokeFullAccess` and `AmazonAPIGatewayAdministrator`. (Note: you can also select logs permissions if you would like to see the logs for your lambda functions)
+		- In `Attach permissions policies` search and select `AmazonAPIGatewayInvokeFullAccess` and `AmazonDynamoDBFullAccess`. (Note: you can also select logs permissions if you would like to see the logs for your lambda functions)
 		- click next give the Role a name and create the role
 	- Navigate to [AWS Lambda page](https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/functions) and create 3 lambda fuctions from scratch. give them a name and for permission select the newly permission you created
 	- For each of the functions copy and paste the code to index.js and click deploy.
